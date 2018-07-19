@@ -10,7 +10,7 @@ export class Stack<T> {
   }
 
   peek(): T | undefined {
-    return this.store[0]
+    return this.store[this.store.length - 1]
   }
 
   get length(): number {

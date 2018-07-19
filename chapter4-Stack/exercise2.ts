@@ -1,31 +1,35 @@
 import { Stack } from './stack';
 
-function toPolishNotation(input: string): void {
+const Operators = ['+', '-', '*', '/']
+const Brackets = ['(', ')']
+const OperatorsAndBrackets = Operators.concat(Brackets)
+
+function toPolishNotation(input: string): Stack<string> {
   const arr = toArr(input.replace(/ /g, ''))
   const s1 = new Stack<string>()
-  const s2 = new Stack<string | number>()
+  const s2 = new Stack<string>()
 
-  for (let i = 0; i < arr.length; i++) {
-    const ele = arr[i]
-    console.log(ele);
-    if (isNumber(ele)) return s2.push(ele)
-    if (isOperator(ele as string)) {
+  arr.forEach(ele => {
+    if (isNumberString(ele)) return s2.push(ele)
+
+    if (isOperator(ele)) {
       let topEle = s1.peek()
       while (true) {
-        if (!topEle || topEle === '(') {
-          s1.push(ele as string)
+        if (
+          !topEle ||
+          topEle === '(' ||
+          getOperatorPriority(ele) > getOperatorPriority(topEle)
+        ) {
+          s1.push(ele)
           break
         }
-        if (getOperatorPriority(ele as string) > getOperatorPriority(topEle)) {
-          s1.push(ele as string)
-          break
-        } else {
-          s2.push(s1.pop())
-          topEle = s1.peek()
-        }
+        s2.push(s1.pop())
+        topEle = s1.peek()
       }
     }
+
     if (ele === '(') return s1.push(ele)
+
     if (ele === ')') {
       let topEle = s1.pop()
       while (topEle !== '(') {
@@ -34,39 +38,38 @@ function toPolishNotation(input: string): void {
       }
       return
     }
-  }
+  })
 
-  while(!s1.isEmpty()) {
-    s2.push(s1.pop())
-  }
+  while(!s1.isEmpty()) s2.push(s1.pop())
 
-  console.log(s2.store.reverse());
+  return s2
 }
 
 function isOperator(char: string): boolean {
-  return ['+', '-', '*', '/'].includes(char)
+  return Operators.includes(char)
 }
 
 function getOperatorPriority(operator: string): number {
   return operator === '+' || operator === '-' ? 0 : 1
 }
 
-function toArr(content: string): string | number[] {
+function isNumberString(str: string): boolean {
+  return !OperatorsAndBrackets.includes(str)
+}
+
+function toArr(content: string): string[] {
   const result = []
-  const others = ['+', '-', '*', '/', '(', ')']
   let current = ''
-  for (let i = 0; i < content.length; i++) {
-    const char = content.charAt(i)
-    if (others.includes(char)) {
+  content.split('').forEach(char => {
+    if (OperatorsAndBrackets.includes(char)) {
       if (current) {
-        result.push(+current)
+        result.push(current)
         current = ''
       }
-      result.push(char)
-    } else {
-      current += char
+      return result.push(char)
     }
-  }
+    current += char
+  })
   return result
 }
 
