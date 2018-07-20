@@ -1,12 +1,12 @@
 export class Stack<T> {
-  store: T[] = [];
+  private store: T[] = []
 
   push(val: T) {
-    this.store.push(val);
+    this.store.push(val)
   }
 
   pop(): T | undefined {
-    return this.store.pop();
+    return this.store.pop()
   }
 
   peek(): T | undefined {
@@ -19,5 +19,16 @@ export class Stack<T> {
 
   isEmpty(): boolean {
     return this.store.length === 0
+  }
+
+  /** reverse stack */
+  reverse(): Stack<T> {
+    const newStack = new Stack<T>()
+    this.forEach(ele => newStack.push(ele))
+    return newStack
+  }
+
+  forEach(fn: (ele: T) => any) {
+    while(!this.isEmpty()) fn(this.pop())
   }
 }

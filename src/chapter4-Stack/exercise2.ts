@@ -1,11 +1,35 @@
+import * as inquirer from 'inquirer'
 import { Stack } from './stack';
 
 const Operators = ['+', '-', '*', '/']
 const Brackets = ['(', ')']
 const OperatorsAndBrackets = Operators.concat(Brackets)
 
-function toPolishNotation(input: string): Stack<string> {
-  const arr = toArr(input.replace(/ /g, ''))
+async function main() {
+  const { expression } =  await inquirer.prompt([{
+    type: 'input',
+    name: 'expression',
+    message: 'please input the expression'
+  }]) as { expression: string }
+
+  const polishNotationStack = toPolishNotation(expression)
+  const resultStack = new Stack<string>()
+  const polishNotation: string[] = []
+
+  polishNotationStack.forEach(ele => {
+    polishNotation.push(ele)
+    if (isNumberString(ele)) return resultStack.push(ele)
+    const operands2 = resultStack.pop()
+    const operands1 = resultStack.pop()
+    resultStack.push(eval(`${operands1} ${ele} ${operands2}`))
+  })
+
+  console.log('polishNotation: ', polishNotation.join(' '));
+  console.log('result: ', resultStack.pop())
+}
+
+function toPolishNotation(expression: string): Stack<string> {
+  const arr = toArr(expression.replace(/ /g, '')) // convert expression to array of operands and operators
   const s1 = new Stack<string>()
   const s2 = new Stack<string>()
 
@@ -42,7 +66,7 @@ function toPolishNotation(input: string): Stack<string> {
 
   while(!s1.isEmpty()) s2.push(s1.pop())
 
-  return s2
+  return s2.reverse()
 }
 
 function isOperator(char: string): boolean {
@@ -73,4 +97,4 @@ function toArr(content: string): string[] {
   return result
 }
 
-toPolishNotation('192 + 23 + 90 * 3 + (2 - 1)')
+main()
