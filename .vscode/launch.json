@@ -5,13 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug by ts-node",
+      "name": "Current TS File",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
       "args": [
-        "${file}"
+        "${relativeFile}"
       ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register"
+      ],
+      "sourceMaps": true,
       "cwd": "${workspaceRoot}",
       "protocol": "inspector",
       "console": "integratedTerminal",

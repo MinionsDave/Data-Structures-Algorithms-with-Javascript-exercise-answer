@@ -73,9 +73,4 @@ function toArr(content: string): string[] {
   return result
 }
 
-function isNumber(val: any): boolean {
-  return typeof val === 'number'
-}
-
-
 toPolishNotation('192 + 23 + 90 * 3 + (2 - 1)')
