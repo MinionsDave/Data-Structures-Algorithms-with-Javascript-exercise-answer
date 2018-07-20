@@ -5,7 +5,9 @@
   "repository": "https://github.com/MinionsDave/Data-Structures-Algorithms-with-Javascript-exercise-answer.git",
   "license": "MIT",
   "dependencies": {
+    "@types/chai": "^4.1.4",
     "@types/inquirer": "^0.0.42",
+    "chai": "^4.1.2",
     "inquirer": "^6.0.0",
     "ts-node": "^7.0.0",
     "typescript": "^2.9.2"

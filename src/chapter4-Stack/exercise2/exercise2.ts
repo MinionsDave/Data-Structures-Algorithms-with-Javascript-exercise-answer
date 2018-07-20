@@ -1,5 +1,5 @@
 import * as inquirer from 'inquirer'
-import { Stack } from './stack';
+import { Stack } from '../stack';
 
 const Operators = ['+', '-', '*', '/']
 const Brackets = ['(', ')']
@@ -28,7 +28,7 @@ async function main() {
   console.log('result: ', resultStack.pop())
 }
 
-function toPolishNotation(expression: string): Stack<string> {
+export function toPolishNotation(expression: string): Stack<string> {
   const arr = toArr(expression.replace(/ /g, '')) // convert expression to array of operands and operators
   const s1 = new Stack<string>()
   const s2 = new Stack<string>()
@@ -84,7 +84,7 @@ function isNumberString(str: string): boolean {
 function toArr(content: string): string[] {
   const result = []
   let current = ''
-  content.split('').forEach(char => {
+  content.split('').forEach((char, i) => {
     if (OperatorsAndBrackets.includes(char)) {
       if (current) {
         result.push(current)
@@ -93,8 +93,9 @@ function toArr(content: string): string[] {
       return result.push(char)
     }
     current += char
+    if (content.length === i + 1) result.push(current)
   })
   return result
 }
 
-main()
+if (require.main === module) main()
